@@ -1,15 +1,13 @@
 #import dependencies
 import numpy as np
 
-import datetime as dt
-
 import sqlalchemy
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
 from sqlalchemy import create_engine, func, MetaData
 from sqlalchemy.pool import StaticPool
 
-from flask import Flask, jsonify
+from flask import Flask, jsonify,render_template
 
 import logging
 
@@ -26,8 +24,7 @@ Base = automap_base()
 Base.prepare(engine, reflect=True)
 
 # Save reference to the table
-Measurement = Base.classes.measurement
-Station = Base.classes.station
+Apps = Base.classes.apps
 
 # Create our connection object
 session = Session(engine)
@@ -50,8 +47,8 @@ def welcome():
         "<br/>"+
         "Available Routes:<br/>" +
         "<br/>"+
-        "/api/v1.0/precipitation<br/>"+
-        "Return a list of all dates and precipitation<br/>"+
+        "/api/v1.0/apps<br/>"+
+        "Return a list of all apps included <br/>"+
         "<br/>"+
         "/api/v1.0/stations<br/>"+
         "Return a list of stations data<br/>"+
@@ -62,6 +59,26 @@ def welcome():
         "/api/v1.0/<start><br/>"+
         "When given the start only, calculate TMIN, TAVG, and TMAX for all dates greater than and equal to the start date.<br/>"+
         "<br/>"+
-        "/api/v1.0/<start>/<end>"
-        "When given the start and the end date, calculate the TMIN, TAVG, and TMAX for dates between the start and end date inclusive.<br/>"
+        "/api/v1.0/<app_name>/<device>"
+        "When given the app_name and the device type ,  return information about that app in that specific device.<br/>"
     )
+
+@app.route("/api/v1.0/apps")
+def apps():
+    apps = session.query(Apps.app).all()
+    apps=jsonify(apps)
+    return render_template(index.html,name=apps)
+
+
+@app.route("/api/v1.0/<app_name>")
+def apps(app_name):
+    info = session.query(Apps.name, Apps.size).\
+                                  filter(Apps.name == app_name).all()
+    info=jsonify(apps)
+    return render_template(index.html,name=info)
+                        
+
+
+
+
+
