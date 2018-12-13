@@ -5,6 +5,7 @@ from flask import Flask, jsonify,render_template
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
 import mysql_conn
+import numpy as np
 import pymysql
 pymysql.install_as_MySQLdb()
 
@@ -72,7 +73,81 @@ def info(name):
 
     return render_template("Apps.html", name=name,apple_info=apple_info,google_info=google_info, category=category,apps=apps)
 
+@app.route("/api/available")
+def available():
+    return (
+        "<img src=\"https://img.etimg.com/thumb/msid-46065787,width-300,imgsize-83533,resizemode-4/7-things-mobile-app-developers-should-focus-on.jpg\" alt=\"apps\" width=\"800\" height=\"300\"/>"+
+        "<br/>"+
+        "<br/>"+
+        "Available Routes:<br/>" +
+        "<br/>"+
+        "/api/routes<br/>"+
+        "Return a list of all apps<br/>"+
+        "<br/>"+
+        "/api/<name><br/>"+
+        "return apple and android info about certain app<br/>"
+          )
 
+@app.route("/api/routes")
+def routes():
+    app_api = session.query(Apps.name,Apps.a_category,
+                           Apps.a_price, Apps.a_user_rating, Apps.a_size_mb, Apps.a_content_rating,
+                           Apps.g_price, Apps.g_user_rating, Apps.g_size_mb, Apps.g_content_rating).all() 
+    return jsonify(app_api)
+
+@app.route("/api/<name>")
+def JSON_data(name):
+    app_dict = {}
+    app_dict["AppleInfo"] = {}
+    app_dict["AndroidInfo"] = {}
+
+    app_dict["name"] = name
+    app_dict["category"] = (session.query(
+        Apps.a_category).
+        filter(Apps.name == name).all())
+
+    apple_data = (session.query(
+        Apps.a_price, 
+        Apps.a_user_rating, 
+        Apps.a_size_mb, 
+        Apps.a_content_rating).
+        filter(Apps.name == name).all())
+    android_data = (session.query(
+        Apps.g_price, 
+        Apps.g_user_rating, 
+        Apps.g_size_mb, 
+        Apps.g_content_rating).
+        filter(Apps.name == name).all())
+
+    dirty_apples = list(np.ravel(apple_data))
+    dirty_googles = list(np.ravel(android_data))
+
+    apples = []
+    googles = []
+
+    for item in dirty_apples:
+        apples.append(str(item))
+    for item in dirty_googles:
+        googles.append(str(item))
+        
+    app_dict = { 
+        "name": name,
+        "category": (session.query(Apps.a_category).filter(Apps.name == name).all()),
+        'AppleInfo': {
+            'Price': apples[0],
+            'UserRating': apples[1],
+            'FileSize': apples[2],
+            'ContentRating': apples[3] 
+                    },
+        'AndroidInfo': {
+            'Price': googles[0],
+            'UserRating': googles[1],
+            'FileSize': googles[2],
+            'ContentRating': googles[3]
+                    
+                    }
+    }
+    return jsonify(app_dict)
 #  Define main behavior
 if __name__ == "__main__":
     app.run(debug=True)
