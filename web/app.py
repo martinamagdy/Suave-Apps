@@ -91,7 +91,7 @@ def available():
         "/api/routes<br/>"+
         "Return a list of all apps<br/>"+
         "<br/>"+
-        "/api/<name><br/>"+
+        "/api/{app_name}<br/>"+
         "return apple and android info about certain app<br/>"
           )
 
