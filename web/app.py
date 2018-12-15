@@ -39,13 +39,7 @@ def apps():
     for app in all_apps:
         s=str(app).split("'")
         apps.append(s[1])
-    return render_template("index.html",apps=apps),("<link href=\"{{ url_for(\'static\', filename=\'css/vendor/bootstrap/css/bootstrap.min.css\') }}\" rel=\"stylesheet\">"+
-    "<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js\"></script>"+
-    "<script src=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js\"></script>"+
-    "<link href=\"{{ url_for('static', filename='css/vendor/font-awesome/css/font-awesome.min.css') }}\" rel=\"stylesheet\" type=\"text/css\">"+
-    "<link href=\"https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic\" rel=\"stylesheet\" type=\"text/css\">"+
-    "<link href=\"https://fonts.googleapis.com/css?family=Montserrat:400,700\" rel=\"stylesheet\" type=\"text/css\">"+
-    "<link href=\"{{ url_for('static', filename='css/grayscale.min.css') }}\" rel=\"stylesheet\">")
+    return render_template("index.html",apps=apps)
 
 
 @app.route("/info/<name>")
@@ -78,13 +72,7 @@ def info(name):
         google_info.append(g[n])
         n=n+1
 
-    return render_template("second_Apps.html", name=name,apple_info=apple_info,google_info=google_info, category=category,apps=apps),("<link href=\"{{ url_for(\'static\', filename=\'css/vendor/bootstrap/css/bootstrap.min.css\') }}\" rel=\"stylesheet\">"+
-    "<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js\"></script>"+
-    "<script src=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js\"></script>"+
-    "<link href=\"{{ url_for('static', filename='css/vendor/font-awesome/css/font-awesome.min.css') }}\" rel=\"stylesheet\" type=\"text/css\">"+
-    "<link href=\"https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic\" rel=\"stylesheet\" type=\"text/css\">"+
-    "<link href=\"https://fonts.googleapis.com/css?family=Montserrat:400,700\" rel=\"stylesheet\" type=\"text/css\">"+
-    "<link href=\"{{ url_for('static', filename='css/grayscale.min.css') }}\" rel=\"stylesheet\">")
+    return render_template("Apps.html", name=name,apple_info=apple_info,google_info=google_info, category=category,apps=apps)
 
 @app.route("/api/available")
 def available():
@@ -99,7 +87,7 @@ def available():
         "<br/>"+
         "/api/{app_name}<br/>"+
         "return apple and android info about certain app<br/>"+
-        "<a href=\"/\">Home page</a>"
+        "<a href=\"/\">Return To Home page</a>"
           )
 
 @app.route("/api/routes")
