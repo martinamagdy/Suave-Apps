@@ -43,8 +43,8 @@ def apps():
     "<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js\"></script>"+
     "<script src=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js\"></script>"+
     "<link href=\"{{ url_for('static', filename='css/vendor/font-awesome/css/font-awesome.min.css') }}\" rel=\"stylesheet\" type=\"text/css\">"+
-    "<link href=\"{{ url_for('static', filename='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic') }}\" rel=\"stylesheet\" type=\"text/css\">"+
-    "<link href=\"{{ url_for('static', filename='https://fonts.googleapis.com/css?family=Montserrat:400,700') }}\" rel=\"stylesheet\" type=\"text/css\">"+
+    "<link href=\"https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic\" rel=\"stylesheet\" type=\"text/css\">"+
+    "<link href=\"https://fonts.googleapis.com/css?family=Montserrat:400,700\" rel=\"stylesheet\" type=\"text/css\">"+
     "<link href=\"{{ url_for('static', filename='css/grayscale.min.css') }}\" rel=\"stylesheet\">")
 
 
@@ -78,7 +78,13 @@ def info(name):
         google_info.append(g[n])
         n=n+1
 
-    return render_template("Apps.html", name=name,apple_info=apple_info,google_info=google_info, category=category,apps=apps)
+    return render_template("Apps.html", name=name,apple_info=apple_info,google_info=google_info, category=category,apps=apps),("<link href=\"{{ url_for(\'static\', filename=\'css/vendor/bootstrap/css/bootstrap.min.css\') }}\" rel=\"stylesheet\">"+
+    "<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js\"></script>"+
+    "<script src=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js\"></script>"+
+    "<link href=\"{{ url_for('static', filename='css/vendor/font-awesome/css/font-awesome.min.css') }}\" rel=\"stylesheet\" type=\"text/css\">"+
+    "<link href=\"https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic\" rel=\"stylesheet\" type=\"text/css\">"+
+    "<link href=\"https://fonts.googleapis.com/css?family=Montserrat:400,700\" rel=\"stylesheet\" type=\"text/css\">"+
+    "<link href=\"{{ url_for('static', filename='css/grayscale.min.css') }}\" rel=\"stylesheet\">")
 
 @app.route("/api/available")
 def available():
@@ -88,11 +94,12 @@ def available():
         "<br/>"+
         "Available Routes:<br/>" +
         "<br/>"+
-        "/api/routes<br/>"+
+        "<a href=\"/api/routes\">/api/routes</a><br/>"+
         "Return a list of all apps<br/>"+
         "<br/>"+
         "/api/{app_name}<br/>"+
-        "return apple and android info about certain app<br/>"
+        "return apple and android info about certain app<br/>"+
+        "<a href=\"/\">Home page</a>"
           )
 
 @app.route("/api/routes")
